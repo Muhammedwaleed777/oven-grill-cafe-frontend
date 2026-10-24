@@ -52,7 +52,7 @@ export default function TrackOrderPage() {
           {error && <div className="mt-6 bg-red-100 text-red-700 p-4 rounded-xl text-center font-semibold">{error}</div>}
 
           {order && (
-            <div className="mt-10 border-t pt-8 animate-fadeIn">
+            <div className="mt-10 border-t pt-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-[#1A1A1A]">Order {order.orderNumber}</h2>
                 <span className={`px-4 py-1 rounded-full text-sm font-bold ${
