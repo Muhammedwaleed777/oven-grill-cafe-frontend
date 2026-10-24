@@ -18,16 +18,31 @@ export default function LoginPage() {
 
     try {
       const res = await api.post('/auth/login', { phone, password })
+      
+      // Token aur User save karen
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))
       
-      if (res.data.user.role === 'ADMIN') {
+      // 🔥 Role ke hisaab se sahi dashboard par bhejen
+      const role = res.data.user.role
+      
+      if (role === 'ADMIN') {
         router.push('/admin/dashboard')
-      } else {
+      } else if (role === 'CHEF') {
+        router.push('/chef/dashboard')
+      } else if (role === 'RIDER') {
+        router.push('/rider/dashboard')
+      } else if (role === 'CASHIER') {
+        router.push('/cashier/dashboard')
+      } else if (role === 'STAFF') {
         router.push('/staff/dashboard')
+      } else {
+        // Customer ko main menu par bhejen
+        router.push('/')
       }
+      
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed')
+      setError(err.response?.data?.error || 'Login failed. Please check your credentials.')
     } finally {
       setLoading(false)
     }
@@ -36,18 +51,19 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[#1A1A1A] flex items-center justify-center px-4">
       <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center mb-2 text-[#1A1A1A]">
-          Welcome Back
-        </h2>
-        <p className="text-center text-gray-500 mb-6">Login to Oven Grill Cafe</p>
+        
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-[#1A1A1A]">Welcome Back</h2>
+          <p className="text-gray-500 mt-2">Login to Oven Grill Cafe</p>
+        </div>
 
         {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">
+          <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-sm font-semibold text-center">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
@@ -56,7 +72,7 @@ export default function LoginPage() {
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FF6B00]"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF6B00]"
               placeholder="03XXXXXXXXX"
               required
             />
@@ -70,7 +86,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FF6B00]"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF6B00]"
               placeholder="••••••••"
               required
             />
@@ -79,11 +95,15 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#FF6B00] hover:bg-[#e55f00] text-white font-semibold py-2 rounded-lg transition disabled:opacity-50"
+            className="w-full bg-[#FF6B00] hover:bg-[#e55f00] text-white font-bold py-3 rounded-lg transition disabled:opacity-50 mt-2"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
+        <div className="mt-8 text-center text-sm text-gray-500">
+          Are you a customer? <a href="/" className="text-[#FF6B00] font-bold hover:underline">Go to Home</a>
+        </div>
       </div>
     </main>
   )
