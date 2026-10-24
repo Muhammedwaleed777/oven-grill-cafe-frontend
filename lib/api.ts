@@ -1,10 +1,9 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://oven-grill-cafe-production.up.railway.app/api', // <-- Apna Railway URL daalen
+  baseURL: 'https://oven-grill-cafe-production.up.railway.app/api',
   headers: { 'Content-Type': 'application/json' },
 })
-
 // Automatically add token to every request
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
